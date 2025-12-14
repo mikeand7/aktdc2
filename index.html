@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AKTDC - Navodaya Vidyalaya Coaching</title>
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            --primary: #0A192F;    /* Deep Navy */
+            --accent: #FFB400;     /* Bright Amber */
+            --light-bg: #F4F6F8;   /* Light Gray */
+            --text-dark: #1E293B;
+            --text-light: #64748B;
+            --white: #FFFFFF;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-main);
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: var(--light-bg);
+            overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- UTILITIES --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 180, 0, 0.4);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--white);
+            color: var(--white);
+            margin-left: 10px;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            z-index: 1001;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { font-weight: 500; color: var(--text-dark); transition: color 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--primary);
+            z-index: 1001;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #112240 100%);
+            color: var(--white);
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 600px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        /* Abstract Shape decoration */
+        .shape {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 180, 0, 0.1);
+            border-radius: 50%;
+            top: -50px;
+            right: -100px;
+            z-index: 1;
+        }
+
+        /* --- COURSES SECTION (Grid Layout) --- */
+        .courses { padding: 80px 0; }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted min-width for mobile */
+            gap: 30px;
+        }
+
+        .course-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid #eee;
+        }
+
+        .course-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+        }
+
+        .card-header {
+            height: 150px;
+            background: #e0e6ed;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #cbd5e1;
+        }
+        
+        .card-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--accent);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .card-body { padding: 25px; }
+
+        .card-body h3 { margin-bottom: 10px; color: var(--primary); }
+        
+        .card-features {
+            margin: 15px 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .card-features li { margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 15px;
+            display: block;
+        }
+
+        /* --- TESTIMONIALS (Carousel) --- */
+        .testimonials {
+            padding: 80px 0;
+            background: var(--primary);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .testimonials .section-title h2 { color: var(--white); }
+        .testimonials .section-title p { color: rgba(255,255,255,0.7); }
+
+        .testimonial-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            padding: 40px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .slide.active { display: block; animation: fadeEffect 1s; }
+
+        .slide p {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .client-info h4 { color: var(--accent); margin-bottom: 5px; }
+        .client-info span { font-size: 0.9rem; opacity: 0.8; }
+
+        .dots { margin-top: 20px; }
+        .dot {
+            height: 12px;
+            width: 12px;
+            margin: 0 5px;
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            display: inline-block;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .dot.active { background-color: var(--accent); transform: scale(1.2); }
+
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: #020c1b;
+            color: rgba(255,255,255,0.6);
+            padding: 50px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* YouTube Sticker Styles */
+.social-links {
+    margin: 25px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.yt-sticker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.08); /* Transparent styling */
+    padding: 10px 20px;
+    border-radius: 50px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.yt-sticker svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    transition: transform 0.3s ease;
+}
+
+.yt-sticker:hover {
+    background-color: #FF0000; /* YouTube Red */
+    border-color: #FF0000;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+    color: white;
+}
+
+.yt-sticker:hover svg {
+    transform: scale(1.1);
+}
+
+        /* --- ABOUT SECTION STYLES --- */
+        .about-section {
+            padding: 100px 0;
+            background-color: var(--white);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 1;
+        }
+
+        .about-image::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px solid var(--accent);
+            border-radius: 20px;
+            top: 20px;
+            left: -20px;
+            z-index: 0;
+        }
+
+        .about-content h3 {
+            color: var(--accent);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .about-content h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            line-height: 1.2;
+            margin-bottom: 25px;
+        }
+
+        .about-content p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+        
+        .about-stats {
+            margin-top: 30px;
+            display: flex;
+            gap: 40px;
+            justify-content: start;
+        }
+
+        /* Mission Cards */
+        .mission-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 70px;
+        }
+
+        .mission-card {
+            padding: 30px;
+            background: var(--light-bg);
+            border-radius: 12px;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .mission-card:hover {
+            background: var(--white);
+            box-shadow: var(--shadow);
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .mission-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .mission-card h4 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .mission-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* --- CONTACT SECTION STYLES --- */
+        .contact-section {
+            padding: 80px 0;
+            background-color: var(--light-bg);
+        }
+
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .contact-info-card {
+            background: var(--primary);
+            color: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .info-icon {
+            background: rgba(255,255,255,0.1);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            margin-right: 20px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .info-text h4 { font-size: 1.1rem; margin-bottom: 5px; color: var(--white); }
+        .info-text p { font-size: 0.95rem; opacity: 0.8; }
+
+        .map-container {
+            margin-top: 30px;
+            height: 250px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .map-container iframe { width: 100%; height: 100%; border: 0; }
+
+        .contact-form-card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-group { margin-bottom: 20px; }
+        
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: var(--font-main);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus { outline: none; border-color: var(--primary); background-color: #f8fafc; }
+        textarea.form-control { resize: vertical; min-height: 120px; }
+
+
+        /* --- RESPONSIVE MEDIA QUERIES --- */
+        @media (max-width: 992px) {
+            .hero h1 { font-size: 3rem; }
+            .about-grid { gap: 30px; }
+            .about-image::before { left: -10px; top: 10px; }
+        }
+
+        @media (max-width: 768px) {
+            /* General */
+            .section-title h2 { font-size: 2rem; }
+            .section-title p { font-size: 1rem; }
+            
+            /* Nav */
+            .mobile-menu-btn { display: block; }
+            .nav-links {
+                display: none; /* Hidden by default */
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: var(--white);
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                box-shadow: 0 10px 10px rgba(0,0,0,0.05);
+                gap: 20px;
+            }
+            .nav-links.active { display: flex; } /* Shown when active */
+
+            /* Hero */
+            .hero { padding: 60px 0; text-align: center; }
+            .hero-content { margin: 0 auto; }
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .btn { width: 100%; margin: 5px 0; }
+            .btn-outline { margin-left: 0; }
+            .shape { display: none; } /* Hide decorative shape on mobile */
+
+            /* About */
+            .about-section { padding: 60px 0; }
+            .about-grid { grid-template-columns: 1fr; text-align: center; }
+            .about-image { order: -1; max-width: 90%; margin: 0 auto 40px; }
+            .about-image::before { left: 10px; top: 10px; }
+            .about-content h2 { font-size: 2rem; }
+            .about-stats { justify-content: center; }
+
+            /* Contact */
+            .contact-wrapper { grid-template-columns: 1fr; gap: 30px; margin-top: 30px; }
+            .contact-info-card { padding: 25px; order: 2; }
+            .contact-form-card { padding: 25px; }
+
+            /* Testimonials */
+            .slide { padding: 20px; }
+            .slide p { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">AKTDC<span>.</span></div>
+                <div class="mobile-menu-btn" onclick="toggleMenu()">☰</div>
+                
+                <ul class="nav-links">
+                    <li><a href="#courses" onclick="toggleMenu()">Courses</a></li>
+                    <li><a href="results.html">Results</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="#about" onclick="toggleMenu()">About</a></li>
+                    <li><a href="#contact" onclick="toggleMenu()" style="color: var(--primary); font-weight: 700;">Contact Us</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="shape"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>Crack JNVST With Confidence.</h1>
+                <p>Expert coaching for Navodaya Vidyalaya Entrance Exams. We turn potential into performance with structured learning and expert mentorship.</p>
+                <a href="#courses" class="btn btn-primary">Join Now</a>
+                <a href="#" class="btn btn-outline">Free Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="courses" class="courses">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Premium Courses</h2>
+                <p>Designed curriculum for Class 6  Selection Test</p>
+            </div>
+
+            <div class="course-grid">
+                <article class="course-card">
+                    <div class="card-header">
+                        📘
+                        <span class="card-tag">Bestseller</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>JNVST Class 6 Elite</h3>
+                        <p style="font-size: 0.9rem; color: #666;">Complete preparation covering Mental Ability, Arithmetic, and Language.</p>
+                        <ul class="card-features">
+                            <li>✔️ Doubt Clearing Sessions</li>
+                            <li>✔️ 50+ Mock Tests</li>
+                            <li>✔️ 6 months course</li>
+                        </ul>
+                        <span class="price">₹2,999 <small style="font-size: 0.9rem; font-weight:400; color:#888; text-decoration: line-through;">₹5000</small></span>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">View Details</button>
+                    </div>
+                </article>
+
+                <article class="course-card">
+                    <div class="card-header">
+                        📐
+                        <span class="card-tag">New</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>JNVST Class 6 Foundation</h3>
+                        <p style="font-size: 0.9rem; color: #666;">Advanced concepts for Math and Science to secure your seat in Class 9.</p>
+                        <ul class="card-features">
+                            <li>✔️ Deep Dive in concepts</li>
+                            <li>✔️ Previous Year Papers</li>
+                            <li>✔️ 10 months course</li>
+                        </ul>
+                        <span class="price">₹3,499</span>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">View Details</button>
+                    </div>
+                </article>
+
+                <article class="course-card">
+                    <div class="card-header">
+                        🚀
+                    </div>
+                    <div class="card-body">
+                        <h3>Test Series (Crash Course)</h3>
+                        <p style="font-size: 0.9rem; color: #666;">Strictly for practice. High-yield questions and pattern analysis.</p>
+                        <ul class="card-features">
+                            <li>✔️ 20 Full Length Tests</li>
+                            <li>✔️ 3 months course</li>
+                            <li>✔️ Personalized mentorship</li>
+                        </ul>
+                        <span class="price">₹499</span>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">View Details</button>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Success Stories</h2>
+                <p>What parents and students say about AKTDC</p>
+            </div>
+
+            <div class="testimonial-container">
+                <div class="slide active">
+                    <p>"The mental ability tricks taught by the teachers were a game changer. I could solve questions in seconds. Thank you AKTDC for helping me get into JNV Patratu!"</p>
+                    <div class="client-info">
+                        <h4>Akash Bedia</h4>
+                        <span>Selected in JNVST 2024</span>
+                    </div>
+                </div>
+
+                <div class="slide">
+                    <p>"As a parent, I was worried about the competition, but the structured test series and regular feedback helped my daughter improve her score from 60% to 95%."</p>
+                    <div class="client-info">
+                        <h4>Mrs. Sharma</h4>
+                        <span>Parent of Class 6 Student</span>
+                    </div>
+                </div>
+
+                <div class="slide">
+                    <p>"The best coaching center for Navodaya preparation. The teachers are very supportive and clear doubts instantly on WhatsApp."</p>
+                    <div class="client-info">
+                        <h4>Rahul Verma</h4>
+                        <span>Selected in JNVST 2023</span>
+                    </div>
+                </div>
+
+                <div class="dots">
+                    <span class="dot active" onclick="currentSlide(1)"></span>
+                    <span class="dot" onclick="currentSlide(2)"></span>
+                    <span class="dot" onclick="currentSlide(3)"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image">
+                    <img src="https://lh3.googleusercontent.com/gps-cs/AHvCnQyd667U5r-bkCyJgysmlJi88Y5vySB9CfJpOE-KuDzN1Gi5gntGbPcBilnYyQvmEm_GWNIDR0o4Y8qr1ZCogix6ZKwC2gP_1IjfcOehWGLSrXxiRZisUlUCX3XQjgcUDxfbWVTAZw=w750-h813-p-k-no" alt="Students studying in village">
+                </div>
+                <div class="about-content">
+                    <h3>Our Story</h3>
+                    <h2>Bridging the Gap Between Talent and Opportunity.</h2>
+                    <p>
+                        <strong>AKTDC was established in 2023</strong> with a simple yet powerful belief: talent is distributed equally, but opportunity is not. We saw bright young minds in rural villages struggling not because they lacked intelligence, but because they lacked guidance and resources.
+                    </p>
+                    <p>
+                        We started with a vision to democratize education. By bringing high-quality coaching and mentorship to areas with limited resources, we are helping students from the heart of India achieve their academic dreams.
+                    </p>
+                    <div class="about-stats">
+                        <div>
+                            <span style="font-size: 2rem; font-weight: 800; color: var(--accent);">2+</span>
+                            <p style="font-size: 0.9rem; font-weight: 600;">Years of Impact</p>
+                        </div>
+                        <div>
+                            <span style="font-size: 2rem; font-weight: 800; color: var(--accent);">100+</span>
+                            <p style="font-size: 0.9rem; font-weight: 600;">Rural Students</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mission-row">
+                <div class="mission-card">
+                    <span class="mission-icon">🎯</span>
+                    <h4>Our Mission</h4>
+                    <p>To provide accessible, high-quality competitive exam preparation to students in remote and rural villages.</p>
+                </div>
+                <div class="mission-card">
+                    <span class="mission-icon">💡</span>
+                    <h4>Our Vision</h4>
+                    <p>A future where every child, regardless of their geography or economic status, has the resources to fulfill their academic potential.</p>
+                </div>
+                <div class="mission-card">
+                    <span class="mission-icon">🤝</span>
+                    <h4>Our Values</h4>
+                    <p>We prioritize mentorship over business. We believe in building confidence, discipline, and a hunger for learning.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Start Your Success Journey</h2>
+                <p>Have questions about JNVST? Visit our center or request a call back.</p>
+            </div>
+
+            <div class="contact-wrapper">
+                
+                <div class="contact-info-card">
+                    <div class="info-item">
+                        <div class="info-icon">📍</div>
+                        <div class="info-text">
+                            <h4>Visit Our Center</h4>
+                            <p>Gola<br>Ramgarh, Jharkhand 829110</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon">📞</div>
+                        <div class="info-text">
+                            <h4>Call or WhatsApp</h4>
+                            <p>+91 7261xxxxxx</p>
+                            <p style="font-size: 0.8rem; margin-top: 5px;">(Mon-Sat: 9:00 AM - 7:00 PM)</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon">✉️</div>
+                        <div class="info-text">
+                            <h4>Email Us</h4>
+                            <p>admissions@aktdc.com</p>
+                        </div>
+                    </div>
+
+                    <div class="map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14631.93754754946!2d85.71039669955881!3d23.533063961105032!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f45a609013c721%3A0xe1033c8eb1990b9!2sGola%2C%20Jharkhand%20829110!5e0!3m2!1sen!2sin!4v1765691953054!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+
+                <div class="contact-form-card">
+                    <form id="inquiryForm" onsubmit="handleFormSubmit(event)">
+                        <h3 style="margin-bottom: 25px; color: var(--primary);">Request a Free Call Back</h3>
+                        
+                        <div class="form-group">
+                            <label for="name">Student Name</label>
+                            <input type="text" id="name" class="form-control" placeholder="Enter student's name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" class="form-control" placeholder="Your WhatsApp number" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="class">Enquiry Type</label>
+                            <select id="class" class="form-control">
+                                <option>JNVST Class 6</option>
+                                <!--<option>JNVST Class 9</option>-->
+                                <option>Other Enquiry</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Message (Optional)</label>
+                            <textarea id="message" class="form-control" placeholder="Any specific questions?"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%; border-radius: 8px;">Submit Enquiry</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <style>
+    /* Add this simple styling for the new links */
+    .footer-nav {
+        margin: 20px 0;
+    }
+    .footer-nav a {
+        color: #ffffff;
+        text-decoration: none;
+        margin: 0 15px;
+        font-weight: 500;
+        font-size: 1.1rem;
+        transition: color 0.3s ease;
+    }
+    .footer-nav a:hover {
+        color: #cccccc; /* Light grey on hover */
+        text-decoration: underline;
+    }
+</style>
+
+<footer>
+    <div class="container">
+        <h2 style="color: white; margin-bottom: 20px;">AKTDC</h2>
+        <p>Empowering students to achieve their academic dreams.</p>
+        
+        <div class="footer-nav">
+            <a href="results.html">Results</a>
+            <a href="gallery.html">Gallery</a>
+        </div>
+
+        <div class="social-links">
+            <a href="" target="_blank" class="yt-sticker">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                </svg>
+                <span>Subscribe on YouTube</span>
+            </a>
+        </div>
+        <br>
+        <p>© 2025 AKTDC Coaching Center. All rights reserved.</p>
+    </div>
+</footer>
+
+    <script>
+        // Toggle Mobile Menu
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault(); 
+            alert("Thank you! Your details have been submitted. Our team will call you within 24 hours.");
+            document.getElementById("inquiryForm").reset();
+        }
+
+        // Testimonial Slider
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        setInterval(() => {
+            slideIndex++;
+            showSlides(slideIndex);
+        }, 5000);
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("slide");
+            let dots = document.getElementsByClassName("dot");
+            
+            if (n > slides.length) {slideIndex = 1}    
+            if (n < 1) {slideIndex = slides.length}
+            
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";  
+                slides[i].classList.remove("active");
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            
+            slides[slideIndex-1].style.display = "block";  
+            slides[slideIndex-1].classList.add("active");
+            dots[slideIndex-1].className += " active";
+        }
+    </script>
+</body>
+</html>

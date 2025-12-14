@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life at AKTDC - Gallery</title>
+    <style>
+        /* --- INHERITED STYLES (From Index) --- */
+        :root {
+            --primary: #0A192F;    /* Deep Navy */
+            --accent: #FFB400;     /* Bright Amber */
+            --light-bg: #F4F6F8;   /* Light Gray */
+            --text-dark: #1E293B;
+            --text-light: #64748B;
+            --white: #FFFFFF;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-main);
+            color: var(--text-dark);
+            background-color: var(--light-bg);
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header (Standard) */
+        header { background: var(--white); box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        nav { display: flex; justify-content: space-between; align-items: center; height: 80px; }
+        .logo { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { font-weight: 500; color: var(--text-dark); transition: color 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+        .mobile-menu-btn { display: none; font-size: 1.8rem; cursor: pointer; color: var(--primary); }
+
+        /* Footer (Standard) */
+        footer { background: #020c1b; color: rgba(255,255,255,0.6); padding: 50px 0; text-align: center; font-size: 0.9rem; }
+
+        /* --- GALLERY SPECIFIC STYLES --- */
+
+        /* Hero */
+        .gallery-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #112240 100%);
+            color: var(--white);
+            padding: 70px 0;
+            text-align: center;
+        }
+        .gallery-hero h1 { font-size: 2.8rem; margin-bottom: 10px; }
+        .gallery-hero p { opacity: 0.8; font-size: 1.1rem; }
+
+        /* Filter Buttons */
+        .gallery-controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 40px 0;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: var(--white);
+            box-shadow: 0 5px 15px rgba(10, 25, 47, 0.2);
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding-bottom: 80px;
+        }
+
+        .gallery-item {
+            position: relative;
+            height: 250px;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Overlay text on hover */
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 20px;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .gallery-item:hover .overlay { opacity: 1; }
+
+        .overlay h4 { color: var(--white); font-size: 1.1rem; }
+        .overlay p { color: var(--accent); font-size: 0.85rem; font-weight: 600; }
+
+        /* Fade Animation for filtering */
+        .hide { display: none; }
+        .show { animation: fadeIn 0.5s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- LIGHTBOX (Modal) --- */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .lightbox-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 900px;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 5px;
+            animation: zoom 0.6s;
+        }
+
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close-lightbox:hover { color: var(--accent); }
+
+        @keyframes zoom {
+            from {transform:scale(0)} 
+            to {transform:scale(1)}
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; position: absolute; top: 80px; left: 0; width: 100%;
+                background: var(--white); flex-direction: column; align-items: center;
+                padding: 20px 0; box-shadow: 0 10px 10px rgba(0,0,0,0.05); gap: 20px;
+            }
+            .nav-links.active { display: flex; }
+            .mobile-menu-btn { display: block; }
+            
+            .gallery-hero h1 { font-size: 2rem; }
+            .lightbox-content { width: 95%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">AKTDC<span>.</span></div>
+                <div class="mobile-menu-btn" onclick="toggleMenu()">☰</div>
+                
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#courses">Courses</a></li>
+                    <li><a href="results.html">Results</a></li>
+                    <li><a href="#" style="color: var(--accent);">Gallery</a></li>
+                    <li><a href="index.html#about" >About</a></li>
+                    <li><a href="index.html#contact">Contact us</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="gallery-hero">
+        <div class="container">
+            <h1>Moments at AKTDC</h1>
+            <p>From classroom concepts to celebration cheers, a glimpse into our world.</p>
+        </div>
+    </section>
+
+    <section class="container">
+        
+        <div class="gallery-controls">
+            <button class="filter-btn active" onclick="filterGallery('all')">All Photos</button>
+            <button class="filter-btn" onclick="filterGallery('classroom')">Classroom</button>
+            <button class="filter-btn" onclick="filterGallery('events')">Events</button>
+            <button class="filter-btn" onclick="filterGallery('awards')">Awards</button>
+        </div>
+
+        <div class="gallery-grid">
+            
+            <div class="gallery-item show" data-category="classroom" onclick="openLightbox(this)">
+                <img src="https://lh3.googleusercontent.com/gps-cs/AHvCnQyMSkk8Q5l9-ROUT3lnMolNLrghYAl_X8aQubr7ajoKbV-eRwVMVpFZQfnW8xU-e_xMooOpuLDeJIZzRIEL6Rzfq40y689PvwWAoVcAdoTq9I6XXOmwwWc1_f7rQZUysVthJ5OZHg=w750-h813-p-k-no" alt="Students in Class">
+                <div class="overlay">
+                    <h4>Focus Mode</h4>
+                    <p>Daily Practice Session</p>
+                </div>
+            </div>
+
+            <div class="gallery-item show" data-category="events" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1511632765486-a019809dd005?auto=format&fit=crop&w=600&q=80" alt="Republic Day">
+                <div class="overlay">
+                    <h4>Republic Day</h4>
+                    <p>Celebrating at the center</p>
+                </div>
+            </div>
+
+            <div class="gallery-item show" data-category="classroom" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=600&q=80" alt="Teacher explaining">
+                <div class="overlay">
+                    <h4>Doubt Clearing</h4>
+                    <p>Expert Guidance</p>
+                </div>
+            </div>
+
+            <div class="gallery-item show" data-category="awards" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1568820658422-901d83960334?auto=format&fit=crop&w=600&q=80" alt="Trophy">
+                <div class="overlay">
+                    <h4>Toppers Felicitation</h4>
+                    <p>Rewarding Excellence</p>
+                </div>
+            </div>
+
+            <div class="gallery-item show" data-category="events" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1606092195730-5d7b9af1ef4d?auto=format&fit=crop&w=600&q=80" alt="Study Group">
+                <div class="overlay">
+                    <h4>Group Study</h4>
+                    <p>Peer Learning</p>
+                </div>
+            </div>
+
+             <div class="gallery-item show" data-category="awards" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?auto=format&fit=crop&w=600&q=80" alt="Happy Student">
+                <div class="overlay">
+                    <h4>Selection Day</h4>
+                    <p>Joy of Success</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <div id="myLightbox" class="lightbox">
+        <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
+        <img class="lightbox-content" id="img01">
+        <div id="caption"></div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <h2 style="color: white; margin-bottom: 20px;">AKTDC</h2>
+            <p>Empowering students to achieve their academic dreams.</p>
+            <br>
+            <p>© 2025 AKTDC Coaching Center. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle Mobile Menu
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+
+        // --- FILTER FUNCTIONALITY ---
+        function filterGallery(category) {
+            let items = document.querySelectorAll('.gallery-item');
+            let buttons = document.querySelectorAll('.filter-btn');
+
+            // Toggle active button style
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.textContent.toLowerCase().includes(category) || (category === 'all' && btn.textContent.includes('All'))) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Show/Hide Items
+            items.forEach(item => {
+                if (category === 'all') {
+                    item.classList.remove('hide');
+                    item.classList.add('show');
+                } else {
+                    if (item.getAttribute('data-category') === category) {
+                        item.classList.remove('hide');
+                        item.classList.add('show');
+                    } else {
+                        item.classList.remove('show');
+                        item.classList.add('hide');
+                    }
+                }
+            });
+        }
+
+        // --- LIGHTBOX FUNCTIONALITY ---
+        function openLightbox(element) {
+            const modal = document.getElementById("myLightbox");
+            const modalImg = document.getElementById("img01");
+            const captionText = document.getElementById("caption");
+            
+            // Get data from clicked element
+            const img = element.querySelector('img');
+            const title = element.querySelector('h4').innerText;
+            
+            modal.style.display = "block";
+            modalImg.src = img.src;
+            captionText.innerHTML = `<h3>${title}</h3>`;
+        }
+
+        function closeLightbox() {
+            document.getElementById("myLightbox").style.display = "none";
+        }
+
+        // Close lightbox when clicking outside the image
+        window.onclick = function(event) {
+            const modal = document.getElementById("myLightbox");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

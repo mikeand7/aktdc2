@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results & Selections - AKTDC</title>
+    <style>
+        /* --- INHERITED STYLES (From Index) --- */
+        :root {
+            --primary: #0A192F;    /* Deep Navy */
+            --accent: #FFB400;     /* Bright Amber */
+            --light-bg: #F4F6F8;   /* Light Gray */
+            --text-dark: #1E293B;
+            --text-light: #64748B;
+            --white: #FFFFFF;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-main);
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: var(--light-bg);
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        .btn {
+            display: inline-block; padding: 12px 28px; border-radius: 8px;
+            font-weight: 600; transition: var(--transition); cursor: pointer; border: none;
+        }
+        .btn-primary { background-color: var(--accent); color: var(--primary); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 180, 0, 0.4); }
+
+        .section-title { text-align: center; margin-bottom: 50px; }
+        .section-title h2 { font-size: 2.5rem; color: var(--primary); margin-bottom: 10px; }
+        .section-title p { color: var(--text-light); font-size: 1.1rem; }
+
+        /* Header (Same as Index) */
+        header { background: var(--white); box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        nav { display: flex; justify-content: space-between; align-items: center; height: 80px; }
+        .logo { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { font-weight: 500; color: var(--text-dark); transition: color 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+        .mobile-menu-btn { display: none; font-size: 1.8rem; cursor: pointer; color: var(--primary); }
+
+        /* Footer (Same as Index) */
+        footer { background: #020c1b; color: rgba(255,255,255,0.6); padding: 50px 0; text-align: center; font-size: 0.9rem; }
+
+        /* --- NEW STYLES SPECIFIC TO RESULTS PAGE --- */
+
+        /* Compact Hero */
+        .results-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #112240 100%);
+            color: var(--white);
+            padding: 60px 0;
+            text-align: center;
+        }
+        .results-hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--white);
+            padding: 30px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 50px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            text-align: center;
+        }
+        .stat-item h3 { font-size: 2rem; color: var(--accent); font-weight: 800; }
+        .stat-item p { font-size: 0.9rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; }
+
+        /* Rankers Grid */
+        .rankers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .ranker-card {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            text-align: center;
+            border: 1px solid #eee;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .ranker-card:hover { transform: translateY(-10px); border-color: var(--accent); }
+
+        .rank-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--accent);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .ranker-img-wrapper {
+            background: linear-gradient(to bottom, #e0e6ed 50%, var(--white) 50%);
+            padding-top: 30px;
+        }
+
+        .ranker-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .ranker-info { padding: 20px; }
+        .ranker-info h3 { color: var(--primary); margin-bottom: 5px; }
+        .ranker-info .district { color: var(--accent); font-weight: 700; font-size: 0.9rem; margin-bottom: 10px; display: block; }
+        .ranker-info p { font-size: 0.85rem; color: var(--text-light); }
+
+        /* Results Table */
+        .table-container {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 80px;
+        }
+
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-box {
+            padding: 10px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            width: 300px;
+            font-family: inherit;
+        }
+
+        .responsive-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px; /* Ensures table doesn't squish too much */
+        }
+
+        th {
+            background-color: var(--primary);
+            color: var(--white);
+            text-align: left;
+            padding: 15px;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            color: var(--text-dark);
+        }
+
+        tr:nth-child(even) { background-color: #f8fafc; }
+        tr:hover { background-color: #f1f5f9; }
+
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .status-selected { background-color: #dcfce7; color: #166534; }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--accent);
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--primary);
+        }
+        .cta-section h2 { margin-bottom: 20px; font-size: 2rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; position: absolute; top: 80px; left: 0; width: 100%;
+                background: var(--white); flex-direction: column; align-items: center;
+                padding: 20px 0; box-shadow: 0 10px 10px rgba(0,0,0,0.05); gap: 20px;
+            }
+            .nav-links.active { display: flex; }
+            .mobile-menu-btn { display: block; }
+            
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
+            .results-hero h1 { font-size: 2rem; }
+            .table-controls { flex-direction: column; align-items: stretch; }
+            .search-box { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">AKTDC<span>.</span></div>
+                <div class="mobile-menu-btn" onclick="toggleMenu()">☰</div>
+                
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#courses">Courses</a></li>
+                    <li><a href="#" style="color: var(--accent);">Results</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="index.html#about" >About</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="results-hero">
+        <div class="container">
+            <h1>Hall of Fame</h1>
+            <p>Celebrating the hard work and success of our shining stars.</p>
+        </div>
+    </section>
+
+    <div class="stats-bar">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>20+</h3>
+                    <p>Total Selections</p>
+                </div>
+                <div class="stat-item">
+                    <h3>92%</h3>
+                    <p>Success Rate</p>
+                </div>
+                <div class="stat-item">
+                    <h3>3+</h3>
+                    <p>Districts Covered</p>
+                </div>
+                <div class="stat-item">
+                    <h3>2024</h3>
+                    <p>Best Year Yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="container" style="padding-top: 50px;">
+        <div class="section-title">
+            <h2>JNVST 2024 Toppers</h2>
+            <p>Our top performers from the most recent session.</p>
+        </div>
+
+        <div class="rankers-grid">
+            <div class="ranker-card">
+                <div class="rank-badge">#1</div>
+                <div class="ranker-img-wrapper">
+                    <img src="https://ui-avatars.com/api/?name=Arjun+Singh&background=0A192F&color=fff&size=200" alt="Student" class="ranker-img">
+                </div>
+                <div class="ranker-info">
+                    <h3>Akash Bedia</h3>
+                    <span class="district">Selected for JNV Patratu</span>
+                    <p>Class 6 Batch • Scored 98.5%</p>
+                </div>
+            </div>
+
+            <div class="ranker-card">
+                <div class="rank-badge">#2</div>
+                <div class="ranker-img-wrapper">
+                    <img src="https://ui-avatars.com/api/?name=Sneha+Patel&background=FFB400&color=000&size=200" alt="Student" class="ranker-img">
+                </div>
+                <div class="ranker-info">
+                    <h3>Sneha Patel</h3>
+                    <span class="district">Selected for JNV Ranchi</span>
+                    <p>Class 6 Batch • Scored 97.2%</p>
+                </div>
+            </div>
+
+            <div class="ranker-card">
+                <div class="rank-badge">#3</div>
+                <div class="ranker-img-wrapper">
+                    <img src="https://ui-avatars.com/api/?name=Rahul+K&background=0A192F&color=fff&size=200" alt="Student" class="ranker-img">
+                </div>
+                <div class="ranker-info">
+                    <h3>Rahul Kumar</h3>
+                    <span class="district">Selected for JNV Deoghar</span>
+                    <p>Class 9 Lateral Entry • Math Topper</p>
+                </div>
+            </div>
+
+            <div class="ranker-card">
+                <div class="rank-badge">★</div>
+                <div class="ranker-img-wrapper">
+                    <img src="https://ui-avatars.com/api/?name=Priya+S&background=FFB400&color=000&size=200" alt="Student" class="ranker-img">
+                </div>
+                <div class="ranker-info">
+                    <h3>Priya Sharma</h3>
+                    <span class="district">Selected for JNV Dhanbad</span>
+                    <p>Crash Course Batch</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="section-title">
+            <h2>Full Selection List (2023-24)</h2>
+            <p>Transparency is our core value. Here are our qualified students.</p>
+        </div>
+
+        <div class="table-container">
+            <div class="table-controls">
+                <h3 style="color: var(--primary);">Selection List</h3>
+                <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search by name or district..." class="search-box">
+            </div>
+
+            <div class="responsive-table">
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Class</th>
+                            <th>JNV District</th>
+                            <th>Year</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Amit Verma</td>
+                            <td>Class 6</td>
+                            <td>Hazaribagh</td>
+                            <td>2024</td>
+                            <td><span class="status-pill status-selected">Selected</span></td>
+                        </tr>
+                        <tr>
+                            <td>Kavita Meena</td>
+                            <td>Class 6</td>
+                            <td>Chatra</td>
+                            <td>2024</td>
+                            <td><span class="status-pill status-selected">Selected</span></td>
+                        </tr>
+                        <tr>
+                            <td>Rohan Yadav</td>
+                            <td>Class 9</td>
+                            <td>Daltenganj</td>
+                            <td>2024</td>
+                            <td><span class="status-pill status-selected">Selected</span></td>
+                        </tr>
+                        <tr>
+                            <td>Anjali Gupta</td>
+                            <td>Class 6</td>
+                            <td>Garhwa</td>
+                            <td>2023</td>
+                            <td><span class="status-pill status-selected">Selected</span></td>
+                        </tr>
+                        <tr>
+                            <td>Vikram Singh</td>
+                            <td>Class 6</td>
+                            <td>Giridih</td>
+                            <td>2023</td>
+                            <td><span class="status-pill status-selected">Selected</span></td>
+                        </tr>
+                        <tr>
+                            <td>Neha Prajapati</td>
+                            <td>Class 9</td>
+                            <td>Godda</td>
+                            <td>2023</td>
+                            <td><span class="status-pill status-selected">Selected</span></td>
+                        </tr>
+                        <tr>
+                            <td>Suresh Lowanshi</td>
+                            <td>Class 6</td>
+                            <td>Gumla</td>
+                            <td>2023</td>
+                            <td><span class="status-pill status-selected">Selected</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Do you want to see your name here next year?</h2>
+            <p style="margin-bottom: 30px; color: var(--primary); opacity: 0.9;">Join our upcoming batch and start your preparation today.</p>
+            <a href="index.html#contact" class="btn" style="background: var(--primary); color: var(--white);">Apply for Admission</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <h2 style="color: white; margin-bottom: 20px;">AKTDC</h2>
+            <p>Empowering students to achieve their academic dreams.</p>
+            <br>
+            <p>© 2025 AKTDC Coaching Center. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle Mobile Menu
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+
+        // Simple Table Search Function
+        function filterTable() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("resultsTable");
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 1; i < tr.length; i++) { // Start at 1 to skip header
+                // Search both Name (index 0) and District (index 2)
+                var tdName = tr[i].getElementsByTagName("td")[0];
+                var tdDistrict = tr[i].getElementsByTagName("td")[2];
+                
+                if (tdName || tdDistrict) {
+                    var nameText = tdName.textContent || tdName.innerText;
+                    var districtText = tdDistrict.textContent || tdDistrict.innerText;
+                    
+                    if (nameText.toUpperCase().indexOf(filter) > -1 || districtText.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
